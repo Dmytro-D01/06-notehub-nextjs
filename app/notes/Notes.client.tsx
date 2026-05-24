@@ -9,6 +9,7 @@ import SearchBox from "@/components/SearchBox/SearchBox";
 import NoteForm from "@/components/NoteForm/NoteForm";
 import Pagination from "@/components/Pagination/Pagination";
 import css from "./notes.module.css";
+import Modal from "@/components/Modal/Modal";
 
 export default function NotesClient() {
   const router = useRouter();
@@ -92,11 +93,17 @@ export default function NotesClient() {
       )}
 
       {isFormOpen && (
-        <NoteForm
+        <Modal
           onClose={() =>
             setIsFormOpen(false)
           }
-        />
+        >
+          <NoteForm
+            onClose={() =>
+              setIsFormOpen(false)
+            }
+          />
+        </Modal>
       )}
     </div>
   );
