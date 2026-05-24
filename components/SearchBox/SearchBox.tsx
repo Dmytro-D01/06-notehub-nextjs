@@ -4,17 +4,17 @@ import {
   useState,
   FormEvent,
 } from "react";
-import css from "./SearchBar.module.css";
+import css from "./SearchBox.module.css";
 
-interface SearchBarProps {
+interface SearchBoxProps {
   value: string;
   onSearch: (query: string) => void;
 }
 
-export default function SearchBar({
+export default function SearchBox({
   value,
   onSearch,
-}: SearchBarProps) {
+}: SearchBoxProps) {
   const [input, setInput] =
     useState(value);
 

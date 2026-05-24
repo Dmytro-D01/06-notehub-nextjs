@@ -14,7 +14,7 @@ import {
 } from "@/lib/api";
 import { CreateNoteData } from "@/types/note";
 import NoteList from "@/components/NoteList/NoteList";
-import SearchBar from "@/components/SearchBar/SearchBar";
+import SearchBox from "@/components/SearchBox/SearchBox";
 import NoteForm from "@/components/NoteForm/NoteForm";
 import Pagination from "@/components/Pagination/Pagination";
 import css from "./notes.module.css";
@@ -110,7 +110,7 @@ export default function NotesClient({
   return (
     <div className={css.page}>
       <div className={css.toolbar}>
-        <SearchBar
+        <SearchBox
           value={search}
           onSearch={handleSearch}
         />
