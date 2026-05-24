@@ -8,8 +8,8 @@ import NoteList from "@/components/NoteList/NoteList";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import NoteForm from "@/components/NoteForm/NoteForm";
 import Pagination from "@/components/Pagination/Pagination";
-import css from "./notes.module.css";
 import Modal from "@/components/Modal/Modal";
+import css from "./notes.module.css";
 
 export default function NotesClient() {
   const router = useRouter();
@@ -29,6 +29,7 @@ export default function NotesClient() {
     });
 
   function handleSearch(query: string) {
+    if (query === search) return;
     setSearch(query);
     setPage(1);
     router.push(

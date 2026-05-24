@@ -3,7 +3,6 @@
 import {
   useState,
   useEffect,
-  useCallback,
 } from "react";
 import css from "./SearchBox.module.css";
 
@@ -19,21 +18,13 @@ export default function SearchBox({
   const [input, setInput] =
     useState(value);
 
-  const debouncedSearch = useCallback(
-    (query: string) => {
-      const timer = setTimeout(() => {
-        onSearch(query);
-      }, 500);
-      return () => clearTimeout(timer);
-    },
-    [onSearch],
-  );
-
   useEffect(() => {
-    const cleanup =
-      debouncedSearch(input);
-    return cleanup;
-  }, [input, debouncedSearch]);
+    const timer = setTimeout(() => {
+      onSearch(input);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [input]);
 
   return (
     <input
