@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useDebouncedCallback } from "use-debounce";
 import { fetchNotes } from "@/lib/api";
 import NoteList from "@/components/NoteList/NoteList";
 import SearchBox from "@/components/SearchBox/SearchBox";
@@ -39,15 +40,25 @@ export default function NotesClient() {
       refetchOnMount: false,
     });
 
-  function handleSearch(query: string) {
-    if (query === debouncedSearch)
-      return;
-    setDebouncedSearch(query);
-    setSearch(query);
-    setPage(1);
-    router.push(
-      `/notes?search=${encodeURIComponent(query)}&page=1`,
+  const handleSearch =
+    useDebouncedCallback(
+      (query: string) => {
+        if (query === debouncedSearch)
+          return;
+        setDebouncedSearch(query);
+        setPage(1);
+        router.push(
+          `/notes?search=${encodeURIComponent(query)}&page=1`,
+        );
+      },
+      500,
     );
+
+  function handleSearchChange(
+    query: string,
+  ) {
+    setSearch(query);
+    handleSearch(query);
   }
 
   function handlePageChange(
@@ -77,7 +88,7 @@ export default function NotesClient() {
       <div className={css.toolbar}>
         <SearchBox
           value={search}
-          onSearch={handleSearch}
+          onSearch={handleSearchChange}
         />
         <button
           className={css.addButton}
