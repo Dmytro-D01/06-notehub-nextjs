@@ -49,6 +49,11 @@
   background-color: #16213e;
 }
 
+.error {
+  color: #e94560;
+  font-size: 0.8rem;
+}
+
 .actions {
   display: flex;
   gap: 12px;
@@ -84,6 +89,11 @@
   transition: background-color 0.2s;
 }
 
-.submitButton:hover {
+.submitButton:hover:not(:disabled) {
   background-color: #c73652;
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

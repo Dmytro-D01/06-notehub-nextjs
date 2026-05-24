@@ -4,6 +4,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 import css from "./Modal.module.css";
 
 interface ModalProps {
@@ -25,14 +26,19 @@ export default function Modal({
       "keydown",
       handleKeyDown,
     );
-    return () =>
+    document.body.style.overflow =
+      "hidden";
+
+    return () => {
       document.removeEventListener(
         "keydown",
         handleKeyDown,
       );
+      document.body.style.overflow = "";
+    };
   }, [onClose]);
 
-  return (
+  return createPortal(
     <div
       className={css.overlay}
       onClick={onClose}
@@ -45,6 +51,7 @@ export default function Modal({
       >
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

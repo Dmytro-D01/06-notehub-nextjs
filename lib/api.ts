@@ -1,9 +1,14 @@
 import axios from "axios";
 import {
   Note,
-  NotesResponse,
   CreateNoteData,
 } from "@/types/note";
+
+export interface NotesResponse {
+  notes: Note[];
+  totalPages: number;
+  totalNotes: number;
+}
 
 const BASE_URL =
   "https://notehub-public.goit.study/api";
@@ -60,8 +65,10 @@ export async function createNote(
 
 export async function deleteNote(
   id: string,
-): Promise<void> {
-  await axiosInstance.delete(
-    `/notes/${id}`,
-  );
+): Promise<Note> {
+  const { data } =
+    await axiosInstance.delete<Note>(
+      `/notes/${id}`,
+    );
+  return data;
 }

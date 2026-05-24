@@ -1,41 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import {
-  fetchNotes,
-  createNote,
-  deleteNote,
-} from "@/lib/api";
-import { CreateNoteData } from "@/types/note";
+import { fetchNotes } from "@/lib/api";
 import NoteList from "@/components/NoteList/NoteList";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import NoteForm from "@/components/NoteForm/NoteForm";
 import Pagination from "@/components/Pagination/Pagination";
 import css from "./notes.module.css";
 
-interface NotesClientProps {
-  initialSearch: string;
-  initialPage: number;
-}
-
-export default function NotesClient({
-  initialSearch,
-  initialPage,
-}: NotesClientProps) {
+export default function NotesClient() {
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const [search, setSearch] = useState(
-    initialSearch,
-  );
-  const [page, setPage] = useState(
-    initialPage,
-  );
+  const [search, setSearch] =
+    useState("");
+  const [page, setPage] = useState(1);
   const [isFormOpen, setIsFormOpen] =
     useState(false);
 
@@ -44,26 +23,9 @@ export default function NotesClient({
       queryKey: ["notes", page, search],
       queryFn: () =>
         fetchNotes(page, search),
+      placeholderData: (prev) => prev,
+      refetchOnMount: false,
     });
-
-  const createMutation = useMutation({
-    mutationFn: createNote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["notes"],
-      });
-      setIsFormOpen(false);
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteNote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["notes"],
-      });
-    },
-  });
 
   function handleSearch(query: string) {
     setSearch(query);
@@ -80,18 +42,6 @@ export default function NotesClient({
     router.push(
       `/notes?search=${encodeURIComponent(search)}&page=${newPage}`,
     );
-  }
-
-  function handleCreateNote(
-    noteData: CreateNoteData,
-  ) {
-    createMutation.mutate(noteData);
-  }
-
-  function handleDeleteNote(
-    id: string,
-  ) {
-    deleteMutation.mutate(id);
   }
 
   if (isLoading)
@@ -124,25 +74,25 @@ export default function NotesClient({
         </button>
       </div>
 
-      {data && (
-        <>
+      {data &&
+        data.notes.length > 0 && (
           <NoteList
             notes={data.notes}
-            onDelete={handleDeleteNote}
           />
-          <Pagination
-            currentPage={page}
-            totalPages={data.totalPages}
-            onPageChange={
-              handlePageChange
-            }
-          />
-        </>
+        )}
+
+      {data && data.totalPages > 1 && (
+        <Pagination
+          currentPage={page}
+          totalPages={data.totalPages}
+          onPageChange={
+            handlePageChange
+          }
+        />
       )}
 
       {isFormOpen && (
         <NoteForm
-          onSubmit={handleCreateNote}
           onClose={() =>
             setIsFormOpen(false)
           }

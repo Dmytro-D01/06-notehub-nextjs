@@ -2,12 +2,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-top: 40px;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 40px 0 0;
 }
 
-.button {
-  padding: 10px 20px;
+.page {
+  display: inline-flex;
+}
+
+.pageLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
   border-radius: 8px;
   border: 1px solid #2d2d44;
   background: transparent;
@@ -15,22 +26,23 @@
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
+  text-decoration: none;
   transition: all 0.2s;
 }
 
-.button:hover:not(:disabled) {
+.pageLink:hover {
   border-color: #e94560;
   color: #e94560;
 }
 
-.button:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
+.active .pageLink {
+  background-color: #e94560;
+  border-color: #e94560;
+  color: #ffffff;
 }
 
-.info {
-  color: #a8a8b3;
-  font-size: 0.9rem;
-  min-width: 60px;
-  text-align: center;
+.disabled .pageLink {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
 }

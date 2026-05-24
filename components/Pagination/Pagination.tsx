@@ -1,5 +1,6 @@
 "use client";
 
+import ReactPaginate from "react-paginate";
 import css from "./Pagination.module.css";
 
 interface PaginationProps {
@@ -13,33 +14,31 @@ export default function Pagination({
   totalPages,
   onPageChange,
 }: PaginationProps) {
-  if (totalPages <= 1) return null;
-
   return (
-    <div className={css.pagination}>
-      <button
-        className={css.button}
-        onClick={() =>
-          onPageChange(currentPage - 1)
-        }
-        disabled={currentPage === 1}
-      >
-        ← Prev
-      </button>
-      <span className={css.info}>
-        {currentPage} / {totalPages}
-      </span>
-      <button
-        className={css.button}
-        onClick={() =>
-          onPageChange(currentPage + 1)
-        }
-        disabled={
-          currentPage === totalPages
-        }
-      >
-        Next →
-      </button>
-    </div>
+    <ReactPaginate
+      pageCount={totalPages}
+      forcePage={currentPage - 1}
+      onPageChange={({ selected }) =>
+        onPageChange(selected + 1)
+      }
+      previousLabel="← Prev"
+      nextLabel="Next →"
+      containerClassName={
+        css.pagination
+      }
+      pageClassName={css.page}
+      pageLinkClassName={css.pageLink}
+      previousClassName={css.page}
+      previousLinkClassName={
+        css.pageLink
+      }
+      nextClassName={css.page}
+      nextLinkClassName={css.pageLink}
+      activeClassName={css.active}
+      disabledClassName={css.disabled}
+      breakLabel="..."
+      breakClassName={css.page}
+      breakLinkClassName={css.pageLink}
+    />
   );
 }

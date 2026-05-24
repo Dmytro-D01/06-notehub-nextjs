@@ -2,7 +2,7 @@
 
 import {
   useState,
-  FormEvent,
+  useEffect,
 } from "react";
 import css from "./SearchBox.module.css";
 
@@ -18,31 +18,23 @@ export default function SearchBox({
   const [input, setInput] =
     useState(value);
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    onSearch(input);
-  }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onSearch(input);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [input, onSearch]);
 
   return (
-    <form
-      className={css.form}
-      onSubmit={handleSubmit}
-    >
-      <input
-        className={css.input}
-        type="text"
-        placeholder="Search notes..."
-        value={input}
-        onChange={(e) =>
-          setInput(e.target.value)
-        }
-      />
-      <button
-        className={css.button}
-        type="submit"
-      >
-        Search
-      </button>
-    </form>
+    <input
+      className={css.input}
+      type="text"
+      placeholder="Search notes..."
+      value={input}
+      onChange={(e) =>
+        setInput(e.target.value)
+      }
+    />
   );
 }
