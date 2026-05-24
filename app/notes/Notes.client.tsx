@@ -15,21 +15,34 @@ export default function NotesClient() {
   const router = useRouter();
   const [search, setSearch] =
     useState("");
+  const [
+    debouncedSearch,
+    setDebouncedSearch,
+  ] = useState("");
   const [page, setPage] = useState(1);
   const [isFormOpen, setIsFormOpen] =
     useState(false);
 
   const { data, isLoading, error } =
     useQuery({
-      queryKey: ["notes", page, search],
+      queryKey: [
+        "notes",
+        page,
+        debouncedSearch,
+      ],
       queryFn: () =>
-        fetchNotes(page, search),
+        fetchNotes(
+          page,
+          debouncedSearch,
+        ),
       placeholderData: (prev) => prev,
       refetchOnMount: false,
     });
 
   function handleSearch(query: string) {
-    if (query === search) return;
+    if (query === debouncedSearch)
+      return;
+    setDebouncedSearch(query);
     setSearch(query);
     setPage(1);
     router.push(
@@ -42,7 +55,7 @@ export default function NotesClient() {
   ) {
     setPage(newPage);
     router.push(
-      `/notes?search=${encodeURIComponent(search)}&page=${newPage}`,
+      `/notes?search=${encodeURIComponent(debouncedSearch)}&page=${newPage}`,
     );
   }
 

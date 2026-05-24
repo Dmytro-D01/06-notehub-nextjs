@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  useState,
   useEffect,
+  useRef,
 } from "react";
 import css from "./SearchBox.module.css";
 
@@ -15,26 +15,40 @@ export default function SearchBox({
   value,
   onSearch,
 }: SearchBoxProps) {
-  const [input, setInput] =
-    useState(value);
+  const inputRef =
+    useRef<HTMLInputElement>(null);
+  const timerRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
+
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    if (timerRef.current)
+      clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(
+      () => {
+        onSearch(e.target.value);
+      },
+      500,
+    );
+  }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      onSearch(input);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [input]);
+    return () => {
+      if (timerRef.current)
+        clearTimeout(timerRef.current);
+    };
+  }, []);
 
   return (
     <input
+      ref={inputRef}
       className={css.input}
       type="text"
       placeholder="Search notes..."
-      value={input}
-      onChange={(e) =>
-        setInput(e.target.value)
-      }
+      defaultValue={value}
+      onChange={handleChange}
     />
   );
 }
